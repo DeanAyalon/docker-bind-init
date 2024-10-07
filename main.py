@@ -9,6 +9,15 @@ import subprocess
 import docker
 from docker.models.containers import Container
 
+# TODO implement with Docker SDK?
+def cp(src, dest): subprocess.check_output(['docker', 'cp', src, dest])
+
+# TODO implement with Docker SDK?
+def files(container, src): 
+    try: files = subprocess.check_output(['docker', 'exec', container, 'ls', '-A', src])
+    except: files = ''
+    return len(files.splitlines())
+
 ################################################################
 ##                      SCRIPT EXECUTION                      ##
 ################################################################
@@ -42,22 +51,36 @@ img_template = client.containers.run(image, 'tail -f /dev/null', detach = True, 
 #                             img_template.name + ':' + mount['Destination'], 
 #                             container.name + ':' + mount['Destination']])
 #     except: print(mount['Destination'] + ' does not exist by default on the ' + image + ' image')
-    
-def cp(src, dest):
-    subprocess.check_output(['docker', 'cp', src, dest])
+
+
 
 # Check if running inside a container
 
 # Populate empty bind mounts
 for mount in mounts:
-    # CHECK IF MOUNT IS EMPTY
-    if in_docker:
-        try: 
-            cp(img_template.name + ':' + mount['Destination'], '/tmp/mnt')
-            cp('/tmp/mnt/.', container.name + ":" + mount['Destination'])
-            subprocess.check_output(['rm', '-rf', '/tmp/mnt'])
-        except: print(f'{mount['Destination']} does not exist by default on the {image} image')
+    dest = mount['Destination']
+    # Check if mount is empty
+    container_files = files(container.name, dest)
+    img_files = files(img_template.name, dest)
+    print(dest, container_files, img_files)
 
+    if not img_files:
+        print(f'{dest} does not exist by default on the {image} image')
+    elif container_files:
+        print(dest + ' already initialized, skipping')
     else: 
-        try: cp(img_template.name + ':' + mount['Destination'] + '/.', mount['Source'])
-        except: print(f'{mount['Destination']} does not exist by default on the {image} image')
+        # Copying between containers is not supported!
+        print(f'Initializing {dest} with the default image contents')
+        if in_docker:
+            # Copy to /tmp/mnt, then to the container
+            try: 
+                cp(img_template.name + ':' + mount['Destination'], '/tmp/mnt')
+                cp('/tmp/mnt/.', container.name + ":" + mount['Destination'])
+                # TODO implement with native Python
+                subprocess.check_output(['rm', '-rf', '/tmp/mnt'])
+            except: print(f'{mount['Destination']} does not exist by default on the {image} image')
+
+        else: 
+            # Copy to host mount path
+            try: cp(img_template.name + ':' + mount['Destination'] + '/.', mount['Source'])
+            except: print(f'{mount['Destination']} does not exist by default on the {image} image')
