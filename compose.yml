@@ -1,13 +1,13 @@
 services:
   # docker compose run --rm -i init [container_name]
   init:
+    image: deanayalon/bind-init
     build: 
       platforms:
         - linux/amd64
         - linux/arm64/v8
       tags:
         - ghcr.io/deanayalon/bind-init
-        - deanayalon/bind-init
     container_name: bind-initializer
     hostname: bind-init
     volumes:
