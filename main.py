@@ -14,7 +14,8 @@ def cp(src, dest): subprocess.check_output(['docker', 'cp', src, dest])
 
 # TODO implement with Docker SDK?
 def files(container, src): 
-    try: files = subprocess.check_output(['docker', 'exec', container, 'ls', '-A', src])
+    try: files = subprocess.check_output(['docker', 'exec', container, 'ls', '-A', src], 
+                                         stderr=subprocess.DEVNULL)
     except: files = ''
     return len(files.splitlines())
 

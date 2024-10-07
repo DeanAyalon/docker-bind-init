@@ -2,5 +2,3 @@
 - [ ] Check own container name as arg
 - [ ] Implement empty mount checking with Docker SDK
 - [ ] `/tmp/mnt` native Python removal?
-- [ ] Suppresserror message when `ls` fails
-- [ ] Remove temp container after done
