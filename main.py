@@ -43,6 +43,7 @@ mounts = list(filter(lambda mount: mount['Type'] == 'bind', mounts))
 
 # Create template container from image
 image = container.attrs['Image']
+img_name = container.attrs['Config']['Image']
 img_template = client.containers.run(image, 'tail -f /dev/null', detach = True, remove = True)
 
 # DOCKER CP DOES NOT SUPPORT CONTAINER -> CONTAINER COPY!
@@ -62,25 +63,23 @@ for mount in mounts:
     # Check if mount is empty
     container_files = files(container.name, dest)
     img_files = files(img_template.name, dest)
-    print(dest, container_files, img_files)
 
     if not img_files:
-        print(f'{dest} does not exist by default on the {image} image')
+        print(f'{dest} does not exist by default on the {img_name} image')
     elif container_files:
         print(dest + ' already initialized, skipping')
     else: 
         # Copying between containers is not supported!
-        print(f'Initializing {dest} with the default image contents')
+        print(f'Initializing {dest} with the default contents from {img_name}')
+
         if in_docker:
             # Copy to /tmp/mnt, then to the container
-            try: 
-                cp(img_template.name + ':' + mount['Destination'], '/tmp/mnt')
-                cp('/tmp/mnt/.', container.name + ":" + mount['Destination'])
-                # TODO implement with native Python
-                subprocess.check_output(['rm', '-rf', '/tmp/mnt'])
-            except: print(f'{mount['Destination']} does not exist by default on the {image} image')
+            cp(img_template.name + ':' + dest, '/tmp/mnt')
+            cp('/tmp/mnt/.', container.name + ":" + dest)
+            # TODO implement with native Python
+            subprocess.check_output(['rm', '-rf', '/tmp/mnt'])
 
-        else: 
-            # Copy to host mount path
-            try: cp(img_template.name + ':' + mount['Destination'] + '/.', mount['Source'])
-            except: print(f'{mount['Destination']} does not exist by default on the {image} image')
+        else: # Copy to host mount path
+            cp(img_template.name + ':' + dest + '/.', mount['Source'])
+
+img_template.remove(force = True)
