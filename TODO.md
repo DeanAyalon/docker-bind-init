@@ -1,3 +1,0 @@
-- [ ] Implement `docker cp` using Docker SDK
-- [ ] Implement empty mount checking with Docker SDK
-- [ ] `/tmp/mnt` native Python removal?

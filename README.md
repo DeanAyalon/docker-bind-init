@@ -2,6 +2,10 @@
 Small tool to initialize bind mounts with the image's default contents, just like Docker volumes.<br>
 Bind mounts will only be initialized if they're empty, and the image has default contents for the mount path
 
+## Limits
+Currently, this only works on containers made from images able to run `tail -f /dev/null` and `ls` - minimal images based on binaries will not work, and the script has yet to be designed to handle such a case.
+- Alternatives are being tested, such as mounting a `sleep`/`tail` executable, but so far, not successfully
+
 # Use
 This tool can either be used as a Python script - Requires [Poetry](https://python-poetry.org/)
 ```sh

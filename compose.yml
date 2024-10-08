@@ -19,7 +19,7 @@ services:
     stop_grace_period: 0s
     volumes:
       - ./mnt/test:/media             # init should populate this with the default contents of alpine:/media
-      - somevol:/somevol          # Named volume
+      - somevol:/somevol              # Named volume
       - ./mnt/something:/something    # No default content
     command: tail -f /dev/null
 

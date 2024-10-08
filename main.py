@@ -1,10 +1,9 @@
 #!python3
-from pathlib import Path
 from typing import cast
 
 import sys
-import os
 import subprocess
+from pathlib import Path
 
 import docker
 from docker.models.containers import Container
@@ -53,8 +52,6 @@ img_template = client.containers.run(image, 'tail -f /dev/null', detach = True, 
 #                             img_template.name + ':' + mount['Destination'], 
 #                             container.name + ':' + mount['Destination']])
 #     except: print(mount['Destination'] + ' does not exist by default on the ' + image + ' image')
-
-
 
 # Check if running inside a container
 
