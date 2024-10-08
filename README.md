@@ -2,6 +2,8 @@
 This branch was created as an alternative implementation, using `docker create` and `docker export` to get the default mount path files
 
 ## The Plan
+> ABANDONED - Build will fail if the container does not have a mounted path by default
+
 - [ ] Generate dynamic dockerfile based on container's empty bind mounts
   ```dockerfile
   FROM scratch
