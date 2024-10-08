@@ -1,3 +1,6 @@
+include:
+  - tests.compose.yml
+
 services:
   # docker compose run --rm -i init [container_name]
   init:
@@ -12,16 +15,6 @@ services:
     hostname: bind-init
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-
-  test:
-    image: alpine
-    container_name: bind-test
-    stop_grace_period: 0s
-    volumes:
-      - ./mnt/test:/media             # init should populate this with the default contents of alpine:/media
-      - somevol:/somevol              # Named volume
-      - ./mnt/something:/something    # No default content
-    command: tail -f /dev/null
 
 volumes:
   somevol:

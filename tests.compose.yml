@@ -1,0 +1,19 @@
+services:
+  alpine:
+    image: alpine
+    container_name: bind-test-alpine
+    stop_grace_period: 0s
+    volumes:
+      - ./mnt/test:/media             # init should populate this with the default contents of alpine:/media
+      - somevol:/somevol              # Named volume
+      - ./mnt/something:/something    # No default content
+    command: tail -f /dev/null
+
+  # docker compose create binary
+  binary:
+    image: hello-world
+    container_name: bind-test-binary
+    stop_grace_period: 0s
+    volumes:
+      - ./mnt/hello:/mnt
+      - ./mnt/hello-etc:/etc    # Will be initialized if the container is started
