@@ -20,7 +20,6 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock deanayalon/bind-ini
   > To initialize minimal containers, run the Python script from the host machine
 - Launching another container can be resource-expensive and may not always work. 
 - Some processes do not respond to real-time file changes and may need to be restarted anyway
-
-----
-# Untesteed
-- How would this behave for a file mount? (rather than mounting a directory)
+- Deleting a bind mount from host while a container is running will cause the script to fail if running from a container, and to skip the mount if running from host
+- Does not initialize file mounts or named volumes
+  > Perhaps possible to initialize file mounts when they do not yet exist

@@ -18,14 +18,24 @@ def count_files(mount, container = None):
         try: files = subprocess.check_output(['docker', 'exec', container, 
                                          'ls', '-A', mount['Destination']], 
                                         stderr=subprocess.DEVNULL)
-        except: 
-            print('Cannot check minimal container files from within another container')
-            exit('Run this Python script from your host machine to initialize the container')
+        except Exception as e: 
+            print('''
+The script has failed, due to one of the following reasons:
+- Running inside Docker, trying to initialize a minimal image
+- Bind mount was removed while the container is still running
+  > Recreate the container, or recover the mounted directory
+
+Running from your host machine, this script could handle these situations better''')
+            exit()
         files = files.splitlines()
         # How do we handle minimal binary images? `ls` not recognized
             # Can't export the container and check its contents locally
             # VOLUMES ARE NOT PART OF THE CONTAINER
-    else: files = os.listdir(mount['Source'])
+    else: 
+        if not os.path.isdir(mount['Source']): return -1
+            # File or missing bind mount
+        files = os.listdir(mount['Source'])
+        print(mount, files)
     return len(files)
 
 def dockcp(src, dest): 
@@ -68,6 +78,7 @@ for mount in mounts:
     files = count_files(mount, container_name)
     # Will fail if running as a Docker image trying to initialize minimal images
     if files == 0: empty_mounts.append(mount)
+    # elif files == -1: print(mount['Source'] + ' is a file')
 
 if not len(empty_mounts): exit('No empty bind mounts to initialize')
 
