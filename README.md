@@ -6,8 +6,11 @@ Bind mounts will only be initialized if they're empty, and the image has default
 No real purpose, one can always do these steps on their own, this served more for Python / Docker SDK practice
 
 ## Limits
-Currently, this only works on containers made from images able to run `tail -f /dev/null` and `ls` - minimal images based on binaries will not work, and the script has yet to be designed to handle such a case.
-- Alternatives are being tested, such as mounting a `sleep`/`tail` executable, but so far, not successfully
+- Currently, this only works on containers made from images able to run `tail -f /dev/null` and `ls` - minimal images based on binaries will not work, and the script has yet to be designed to handle such a case.
+  > Alternatives are being tested, such as mounting a `sleep`/`tail` executable, but so far, not successfully
+
+- Launching another container can be resource-expensive and may not always work. 
+- Some processes do not respond to real-time file changes and may need to be restarted anyway
 
 # Use
 This tool can either be used as a Python script - Requires [Poetry](https://python-poetry.org/)
