@@ -25,7 +25,9 @@ def count_files(mount, container = None):
     else: files = os.listdir(mount['Source'])
     return len(files)
 
-def dockcp(src, dest): subprocess.check_output(['docker', 'cp', src, dest])
+def dockcp(src, dest): 
+    print('cp', src, dest)
+    subprocess.check_output(['docker', 'cp', src, dest])
 
 ########################### SAND BOX ###########################
 
@@ -82,15 +84,14 @@ temp_container.remove()
 # Initialize bind mounts - works even if the container is not running!
 for mount in empty_mounts:
     dest = mount['Destination']
-    src = f'exports/{img}/{dest}'
+    src = f'exports/{img}{dest}'
     fulldest = f'{container_name}:{dest}'
     try: files = os.listdir(src)
     except: files = []
 
     if len(files): 
         print('Initializing ' + fulldest)
-        dockcp(src, fulldest)
-
+        dockcp(src + '/.', fulldest)
     else: print(fulldest + ' empty by default')
 
 # Remove extract
