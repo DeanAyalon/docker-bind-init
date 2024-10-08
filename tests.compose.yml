@@ -1,6 +1,7 @@
 services:
   alpine:
     image: alpine
+    profiles: [test]
     container_name: bind-test-alpine
     stop_grace_period: 0s
     volumes:
@@ -12,8 +13,12 @@ services:
   # docker compose create binary
   binary:
     image: hello-world
+    profiles: [test]
     container_name: bind-test-binary
     stop_grace_period: 0s
     volumes:
       - ./mnt/hello:/mnt
       - ./mnt/hello-etc:/etc    # Will be initialized if the container is started
+
+volumes:
+  somevol:
