@@ -10,7 +10,9 @@ from pathlib import Path
 import docker
 from docker.models.containers import Container
 
-def files(mount, container = None): 
+import shutil
+
+def count_files(mount, container = None): 
     if in_docker:
         # docker exec ls -A
         files = subprocess.check_output(['docker', 'exec', container, 
@@ -25,9 +27,6 @@ def files(mount, container = None):
 
 ########################### SAND BOX ###########################
 
-# in_docker = True
-# print(files('.', 'suspicious_banach'))
-# exit(2)
 
 ################################################################
 ##                      SCRIPT EXECUTION                      ##
@@ -59,16 +58,38 @@ mounts = list(filter(lambda mount: mount['Type'] == 'bind', mounts))
 empty_mounts = []
 for mount in mounts:
     # Count files
-    mount_files = files(mount, container_name)
+    files = count_files(mount, container_name)
     # Will fail if running as a Docker image trying to initialize minimal images
 
-    if mount_files == 0:
+    if files == 0:
         empty_mounts.append(mount)
+
+if not len(empty_mounts): exit('No empty bind mounts to initialize')
 
 # Create template container from image
 img = container.attrs['Config']['Image']
 temp_container = cast(Container, client.containers.create(img, ['']))
 
-# Export into tar
+# Export container data
 subprocess.check_output(['docker', 'export', '-o', f'exports/{img}.tar', 
                          temp_container.name])
+shutil.unpack_archive(f'exports/{img}.tar', extract_dir=f'exports/{img}')
+
+# Remove container and archive
+os.remove(f'exports/{img}.tar')
+temp_container.remove()
+
+# Initialize bind mounts
+for mount in empty_mounts:
+    dest = mount['Destination']
+    fulldest = f'{container_name}:{dest}'
+    try: files = os.listdir(f'exports/{img}/{dest}')
+    except: files = []
+
+    if len(files): 
+        print('Initializing ' + fulldest)
+        # TODO
+    else: print(fulldest + ' empty by default')
+
+# Remove extract
+shutil.rmtree(f'exports/{img}')
