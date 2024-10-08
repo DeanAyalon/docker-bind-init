@@ -37,6 +37,9 @@ def files(mount, container = None):
 if len(sys.argv) < 2: exit('Please specify a container for bind mount initialization')
 container_name = sys.argv[1]
 
+# Execution context
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 # Check if running in Docker
 cgroup = Path('/proc/self/cgroup')
 in_docker = Path('/.dockerenv').is_file() or cgroup.is_file() and 'docker' in cgroup.read_text()
@@ -55,8 +58,6 @@ mounts = list(filter(lambda mount: mount['Type'] == 'bind', mounts))
 # Check mount contents
 empty_mounts = []
 for mount in mounts:
-    dest = mount['Destination']
-
     # Count files
     mount_files = files(mount, container_name)
     # Will fail if running as a Docker image trying to initialize minimal images
@@ -64,4 +65,10 @@ for mount in mounts:
     if mount_files == 0:
         empty_mounts.append(mount)
 
-print('empty', empty_mounts)
+# Create template container from image
+img = container.attrs['Config']['Image']
+temp_container = cast(Container, client.containers.create(img, ['']))
+
+# Export into tar
+subprocess.check_output(['docker', 'export', '-o', f'exports/{img}.tar', 
+                         temp_container.name])
