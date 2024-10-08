@@ -1,17 +1,17 @@
 include:
   - tests.compose.yml
 
-# services:
-#   # docker compose run --rm -i init [container_name]
-#   init:
-#     image: deanayalon/bind-init:export
-#     build: 
-#       platforms:
-#         - linux/amd64
-#         - linux/arm64/v8
-#       tags:
-#         - ghcr.io/deanayalon/bind-init;export
-#     container_name: bind-initializer
-#     hostname: bind-init
-#     volumes:
-#       - /var/run/docker.sock:/var/run/docker.sock:ro
+services:
+  # docker compose run --rm -i init [container_name]
+  init:
+    image: deanayalon/bind-init:export
+    build: 
+      platforms:
+        - linux/amd64
+        - linux/arm64/v8
+      tags:
+        - ghcr.io/deanayalon/bind-init:export
+    container_name: bind-initializer
+    hostname: bind-init
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro

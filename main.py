@@ -15,9 +15,12 @@ import shutil
 def count_files(mount, container = None): 
     if in_docker:
         # docker exec ls -A
-        files = subprocess.check_output(['docker', 'exec', container, 
+        try: files = subprocess.check_output(['docker', 'exec', container, 
                                          'ls', '-A', mount['Destination']], 
                                         stderr=subprocess.DEVNULL)
+        except: 
+            print('Cannot check minimal container files from within another container')
+            exit('Run this Python script from your host machine to initialize the container')
         files = files.splitlines()
         # How do we handle minimal binary images? `ls` not recognized
             # Can't export the container and check its contents locally
