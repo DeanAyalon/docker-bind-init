@@ -1,0 +1,27 @@
+services:
+  # docker compose run --rm -i init [container_name]
+  init:
+    image: deanayalon/bind-init:export
+    build: 
+      platforms:
+        - linux/amd64
+        - linux/arm64/v8
+      tags:
+        - ghcr.io/deanayalon/bind-init;export
+    container_name: bind-initializer
+    hostname: bind-init
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  test:
+    image: alpine
+    container_name: bind-test
+    stop_grace_period: 0s
+    volumes:
+      - ./mnt/test:/media             # init should populate this with the default contents of alpine:/media
+      - somevol:/somevol              # Named volume
+      - ./mnt/something:/something    # No default content
+    command: tail -f /dev/null
+
+volumes:
+  somevol:
