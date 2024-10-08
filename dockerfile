@@ -16,9 +16,10 @@ FROM base
 ENV PATH="/app/.venv/bin:$PATH"
 
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
+
+RUN mkdir exports
 COPY --from=deps /app/.venv ./.venv
 
 COPY main.py .
 
 ENTRYPOINT ["python3", "main.py"]
-# python3 main.py
