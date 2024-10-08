@@ -1,6 +1,9 @@
-# Purpose
+# What is this?
 Small tool to initialize bind mounts with the image's default contents, just like Docker volumes.<br>
 Bind mounts will only be initialized if they're empty, and the image has default contents for the mount path
+
+## Purpose
+No real purpose, one can always do these steps on their own, this served more for Python / Docker SDK practice
 
 ## Limits
 Currently, this only works on containers made from images able to run `tail -f /dev/null` and `ls` - minimal images based on binaries will not work, and the script has yet to be designed to handle such a case.
