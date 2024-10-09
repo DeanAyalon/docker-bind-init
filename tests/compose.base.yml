@@ -1,0 +1,4 @@
+services:
+  base:
+    profiles: [test]
+    stop_grace_period: 0s

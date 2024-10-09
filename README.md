@@ -23,3 +23,9 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock deanayalon/bind-ini
 - Deleting a bind mount from host while a container is running will cause the script to fail if running from a container, and to skip the mount if running from host
 - Does not initialize file mounts or named volumes
   > Perhaps possible to initialize file mounts when they do not yet exist
+
+----
+# Need Testing
+- Check behavior when binding a directory to a file
+  > Host mount diretory created, image default contains file<br>
+  > `listdir` should fail when trying to initialize mount

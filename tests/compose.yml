@@ -1,33 +1,36 @@
+name: bind-init
 services:
-  alpine:
+  test-normal:
+    <<: &test
+      extends: 
+        file: compose.base.yml
+        service: base
     image: alpine
-    profiles: [test]
-    container_name: bind-test-alpine
-    stop_grace_period: 0s
+    container_name: bind-test-normal
     volumes:
-      - ./mnt/alpine/test:/media            # init should populate this with the default contents of alpine:/media
-      - ./mnt/alpine/something:/something   # No default content
+      - ./mnt/normal/test:/media            # init should populate this with the default contents of alpine:/media
+      - ./mnt/normal/something:/something   # No default content
       - somevol:/somevol                    # Named volume
-    command: tail -f /dev/null
+    command: &tail tail -f /dev/null
 
-  # docker compose create binary
-  binary:
+  test-binary:
+    <<: *test
     build:
       dockerfile_inline: |
         FROM hello-world
-        COPY main.py test/main.py
-    profiles: [test]
+        COPY compose.yml test/
     container_name: bind-test-binary
-    stop_grace_period: 0s
     volumes:
       - ./mnt/binary/mnt:/mnt     # Empty
-      - ./mnt/binary/test:/test   # Contains main.py
+      - ./mnt/binary/test:/test   # Contains compose.yml
 
-  file: 
+  test-file: 
+    <<: *test
     image: alpine
     container_name: bind-test-file
     volumes:
       - ./mnt/file.txt:/mnt/file.txt
+    command: *tail
 
 volumes:
   somevol:

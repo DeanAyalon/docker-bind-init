@@ -5,13 +5,28 @@ services:
   # docker compose run --rm -i init [container_name]
   init:
     image: deanayalon/bind-init:export
-    build: 
-      platforms:
-        - linux/amd64
-        - linux/arm64/v8
-      tags:
-        - ghcr.io/deanayalon/bind-init:export
     container_name: bind-initializer
     hostname: bind-init
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    stop_grace_period: 0s
+    build: 
+      tags: [ghcr.io/deanayalon/bind-init]
+      platforms:
+        - linux/amd64
+        - linux/arm64/v8
+
+  dev:
+    extends: init
+    develop:
+      watch:
+        - path: main.py
+          action: sync
+          target: /app/main.py
+        - path: dockerfile
+          action: rebuild
+        - path: pyproject.toml
+          action: rebuild
+    container_name: bind-init-dev
+    entrypoint: tail
+    command: -f /dev/null

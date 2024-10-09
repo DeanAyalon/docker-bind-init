@@ -13,17 +13,18 @@ from docker.models.containers import Container
 import shutil
 
 def count_files(mount, container = None): 
-    if in_docker:
-        # docker exec ls -A
+    if in_docker:   # docker exec ls -A
         try: files = subprocess.check_output(['docker', 'exec', container, 
                                          'ls', '-A', mount['Destination']], 
                                         stderr=subprocess.DEVNULL)
-        except Exception as e: 
-            print('''
+        except: 
+            print(f'''
 The script has failed, due to one of the following reasons:
 - Running inside Docker, trying to initialize a minimal image
 - Bind mount was removed while the container is still running
   > Recreate the container, or recover the mounted directory
+
+Mount: {mount['Source']}:{mount['Destination']}
 
 Running from your host machine, this script could handle these situations better''')
             exit()
@@ -32,10 +33,8 @@ Running from your host machine, this script could handle these situations better
             # Can't export the container and check its contents locally
             # VOLUMES ARE NOT PART OF THE CONTAINER
     else: 
-        if not os.path.isdir(mount['Source']): return -1
-            # File or missing bind mount
+        if not os.path.isdir(mount['Source']): return -1    # File or missing bind mount
         files = os.listdir(mount['Source'])
-        print(mount, files)
     return len(files)
 
 def dockcp(src, dest): 
@@ -87,6 +86,7 @@ img = container.attrs['Config']['Image']
 temp_container = cast(Container, client.containers.create(img, ['']))
 
 # Export container data
+if not os.path.isdir('exports'): os.mkdir('exports')
 subprocess.check_output(['docker', 'export', '-o', f'exports/{img}.tar', 
                          temp_container.name])
 shutil.unpack_archive(f'exports/{img}.tar', extract_dir=f'exports/{img}')
