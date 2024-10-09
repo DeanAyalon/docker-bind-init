@@ -5,11 +5,12 @@ services:
   # docker compose run --rm -i init [container_name]
   init:
     extends: &base
-      file: compose.base.yml
+      file: docker/compose.yml
       service: base
     image: deanayalon/bind-init
     container_name: bind-initializer
     build: 
+      dockerfile: docker/dockerfile
       tags: [ghcr.io/deanayalon/bind-init]
       platforms:
         - linux/amd64
@@ -19,14 +20,13 @@ services:
     extends: *base
     image: deanayalon/bind-init:dev
     build: 
-      dockerfile: dockerfile.dev
-      tags: [ghcr.io/deanayalon/bind-init:dev]
+      dockerfile: docker/dockerfile.dev
     develop:
       watch:
         - path: main.py
           action: sync
           target: /app/main.py
-        - path: dockerfile
+        - path: docker/dockerfile.dev
           action: rebuild
         - path: pyproject.toml
           action: rebuild

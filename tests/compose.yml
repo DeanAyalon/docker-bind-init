@@ -2,7 +2,7 @@ name: bind-init
 services:
   test-normal:
     extends: &test
-      file: ../compose.base.yml
+      file: ../docker/compose.yml
       service: test-base
     image: alpine
     container_name: bind-test-normal
