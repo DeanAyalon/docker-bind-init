@@ -4,12 +4,11 @@ include:
 services:
   # docker compose run --rm -i init [container_name]
   init:
+    extends: &base
+      file: compose.base.yml
+      service: base
     image: deanayalon/bind-init
     container_name: bind-initializer
-    hostname: bind-init
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    stop_grace_period: 0s
     build: 
       tags: [ghcr.io/deanayalon/bind-init]
       platforms:
@@ -17,7 +16,11 @@ services:
         - linux/arm64/v8
 
   dev:
-    extends: init
+    extends: *base
+    image: deanayalon/bind-init:dev
+    build: 
+      dockerfile: dockerfile.dev
+      tags: [ghcr.io/deanayalon/bind-init:dev]
     develop:
       watch:
         - path: main.py

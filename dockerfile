@@ -8,11 +8,8 @@ FROM python:3.12-slim-bookworm
 WORKDIR /app
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Docker CLI
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/docker
 RUN mkdir exports
-
-# Python dependencies
 COPY --from=deps /app/.venv ./.venv
 
 COPY main.py .

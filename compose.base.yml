@@ -1,0 +1,10 @@
+services:
+  base:
+    hostname: bind-init
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    stop_grace_period: 0s
+
+  test-base:
+    profiles: [test]
+    stop_grace_period: 0s

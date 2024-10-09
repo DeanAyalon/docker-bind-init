@@ -1,10 +1,9 @@
 name: bind-init
 services:
   test-normal:
-    <<: &test
-      extends: 
-        file: compose.base.yml
-        service: base
+    extends: &test
+      file: ../compose.base.yml
+      service: test-base
     image: alpine
     container_name: bind-test-normal
     volumes:
@@ -14,7 +13,7 @@ services:
     command: &tail tail -f /dev/null
 
   test-binary:
-    <<: *test
+    extends: *test
     build:
       dockerfile_inline: |
         FROM hello-world
@@ -25,7 +24,7 @@ services:
       - ./mnt/binary/test:/test   # Contains compose.yml
 
   test-file: 
-    <<: *test
+    extends: *test
     build:
       dockerfile_inline: |
         FROM alpine
