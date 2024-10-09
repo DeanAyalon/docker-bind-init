@@ -4,7 +4,7 @@ include:
 services:
   # docker compose run --rm -i init [container_name]
   init:
-    image: deanayalon/bind-init:export
+    image: deanayalon/bind-init
     container_name: bind-initializer
     hostname: bind-init
     volumes:
