@@ -29,11 +29,13 @@ services:
     build:
       dockerfile_inline: |
         FROM alpine
-        RUN echo test > test
+        RUN echo test > test 
+        RUN mkdir dir && echo test > dir/test
     container_name: bind-test-file
     volumes:
       - ./mnt/file/file.txt:/mnt/file.txt   # File mount
       - ./mnt/file/dir:/test                # Mount dir onto a file
+      - ./mnt/file/file:/dir                # Mount file onto a dir
     command: *tail
 
 volumes:

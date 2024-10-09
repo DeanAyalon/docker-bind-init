@@ -21,6 +21,7 @@ def count_files(mount, container = None):
             print(f'''
 The script has failed, due to one of the following reasons:
 - Running inside Docker, trying to initialize a minimal image
+- Running inside Docker, trying to inirialize a stopped image
 - Bind mount was removed while the container is still running
   > Recreate the container, or recover the mounted directory
 
@@ -75,6 +76,7 @@ empty_mounts = []
 for mount in mounts:
     # Count files
     files = count_files(mount, container_name)
+    print(f'{files} files in {mount['Source']}')
     # Will fail if running as a Docker image trying to initialize minimal images
     if files == 0: empty_mounts.append(mount)
     # elif files == -1: print(mount['Source'] + ' is a file')
