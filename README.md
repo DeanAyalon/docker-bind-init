@@ -1,3 +1,11 @@
+# What is this?
+Small tool to initialize bind mounts with the image's default contents, just like Docker volumes.<br>
+Bind mounts will only be initialized if they're empty, and the image has default contents for the mount path
+
+## Purpose
+No real purpose, one can always do these steps manually with ease.<br>
+This served more to learn Python/Docker concepts, and to practice the Docker SDK
+
 # Use
 This tool can either be used as a Python script - Requires [Poetry](https://python-poetry.org/)
 ```sh
