@@ -13,15 +13,21 @@ from docker.models.containers import Container
 import shutil
 
 def count_files(mount, container = None): 
-    if in_docker:   # docker exec ls -A
-        try: files = subprocess.check_output(['docker', 'exec', container, 
+    container = cast(Container, container)
+    if in_docker:   
+        # Check container is running
+        if container.status == 'created' or container.status == 'exited':
+            print('Cannot initialize stopped containers when running from a container')
+            exit('Run this script from your host machine to initialize stopped container')
+
+        # docker exec ls -A
+        try: files = subprocess.check_output(['docker', 'exec', container.name, 
                                          'ls', '-A', mount['Destination']], 
                                         stderr=subprocess.DEVNULL)
         except: 
             print(f'''
 The script has failed, due to one of the following reasons:
 - Running inside Docker, trying to initialize a minimal image
-- Running inside Docker, trying to inirialize a stopped image
 - Bind mount was removed while the container is still running
   > Recreate the container, or recover the mounted directory
 
@@ -39,7 +45,7 @@ Running from your host machine, this script could handle these situations better
     return len(files)
 
 def dockcp(src, dest): 
-    print('cp', src, dest)
+    # print('cp', src, dest)
     subprocess.check_output(['docker', 'cp', src, dest])
 
 ########################### SAND BOX ###########################
@@ -75,7 +81,7 @@ mounts = list(filter(lambda mount: mount['Type'] == 'bind', mounts))
 empty_mounts = []
 for mount in mounts:
     # Count files
-    files = count_files(mount, container_name)
+    files = count_files(mount, container)
     print(f'{files} files in {mount['Source']}')
     # Will fail if running as a Docker image trying to initialize minimal images
     if files == 0: empty_mounts.append(mount)
