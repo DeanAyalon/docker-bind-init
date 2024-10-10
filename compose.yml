@@ -16,6 +16,7 @@ services:
         - linux/amd64
         - linux/arm64/v8
 
+  # docker compose --profile dev watch
   dev:
     extends: *base
     image: deanayalon/bind-init:${DEV_TAG:-dev}
@@ -27,10 +28,10 @@ services:
         - path: main.py
           action: sync
           target: /app/main.py
-        - path: docker/dockerfile.${DEV_TAG:-dev}
+        - path: docker/dev/dockerfile.${DEV_TAG:-dev}
           action: rebuild
         - path: pyproject.toml
           action: rebuild
-    container_name: bind-init-dev-${DEV_TAG:-dev}
+    container_name: bind-init-dev${DEV_TAG:+-}${DEV_TAG}
     entrypoint: tail
     command: -f /dev/null
