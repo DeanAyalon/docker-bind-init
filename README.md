@@ -2,15 +2,25 @@
 Small tool to initialize bind mounts with the image's default contents, just like Docker volumes.<br>
 Bind mounts will only be initialized if they're empty, and the image has default contents for the mount path
 
-## Purpose
-No real purpose, one can always do these steps manually with ease.<br>
-This served more to learn Python/Docker concepts, and to practice the Docker SDK
+[![Source](https://img.shields.io/badge/Source-121011?style=for-the-badge&logo=github&logoColor=white)](https://github.com/DeanAyalon/docker-bind-init)
+
+## Table of Contents
+<!-- TOC -->
+
+- [What is this?](#what-is-this)
+    - [Table of Contents](#table-of-contents)
+- [Use](#use)
+- [Limits](#limits)
+    - [Running within Docker](#running-within-docker)
+- [Info](#info)
+    - [Purpose](#purpose)
+    - [Featured Technologies](#featured-technologies)
+
+<!-- /TOC -->
 
 # Use
 This tool can either be used as a Python script - Requires [Poetry](https://python-poetry.org/)
 ```sh
-git clone https://github.com/deanayalon/docker-bind-init
-cd docker-bind-init
 python3 -m venv .venv
 poetry install
 python3 ./main.py [containername]
@@ -39,7 +49,12 @@ These limits **only apply when running the script within its Docker image**, rat
   > Uses `docker exec ls` to check mount contents, ls not recognized in minimal images (based on scratch)
 - Cannot initialize stopped images (Can't perform `docker exec`)
 
-# Featured Technologies
-[![Docker](https://img.shields.io/badge/docker-1D63ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/repository/docker/deanayalon/bind-init)<br>
+# Info
+## Purpose
+No real purpose, one can always do these steps manually with ease.<br>
+This served more to learn Python/Docker concepts, and to practice the Docker SDK
+
+## Featured Technologies
+[![Docker](https://img.shields.io/badge/docker-1D63ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/repository/docker/deanayalon/bind-init)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Poetry](https://img.shields.io/badge/poetry-1d293a?style=for-the-badge&logo=poetry&logoColor=#60A5FA)
