@@ -18,18 +18,18 @@ services:
 
   dev:
     extends: *base
-    image: deanayalon/bind-init:dev
+    image: deanayalon/bind-init:${DEV_TAG:-dev}
     build: 
-      dockerfile: docker/dockerfile.dev
+      dockerfile: docker/dev/dockerfile.${DEV_TAG:-dev}
     develop:
       watch:
         - path: main.py
           action: sync
           target: /app/main.py
-        - path: docker/dockerfile.dev
+        - path: docker/dockerfile.${DEV_TAG:-dev}
           action: rebuild
         - path: pyproject.toml
           action: rebuild
-    container_name: bind-init-dev
+    container_name: bind-init-dev-${DEV_TAG:-dev}
     entrypoint: tail
     command: -f /dev/null

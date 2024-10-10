@@ -6,3 +6,7 @@
 
 # Test Mounts
 tests/mnt
+
+# Environment
+*.env
+!template.env
