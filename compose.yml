@@ -19,6 +19,7 @@ services:
   dev:
     extends: *base
     image: deanayalon/bind-init:${DEV_TAG:-dev}
+    profiles: [dev]
     build: 
       dockerfile: docker/dev/dockerfile.${DEV_TAG:-dev}
     develop:
