@@ -67,7 +67,9 @@ cgroup = Path('/proc/self/cgroup')
 in_docker = Path('/.dockerenv').is_file() or cgroup.is_file() and 'docker' in cgroup.read_text()
 
 # Initialize Docker client
-client = docker.from_env()
+try: client = docker.from_env()
+except: exit('Error initializing Docker, is it installed?') if not in_docker \
+        else exit('Please mount /var/run/docker.sock for this container to work properly')
 
 # Get container
 try: container = cast(Container, client.containers.get(sys.argv[1]))
