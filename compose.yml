@@ -32,6 +32,6 @@ services:
           action: rebuild
         - path: pyproject.toml
           action: rebuild
-    container_name: bind-init-dev${DEV_TAG:+-}${DEV_TAG}
+    container_name: bind-init-dev${DEV_TAG:+-}$DEV_TAG
     entrypoint: tail
     command: -f /dev/null
