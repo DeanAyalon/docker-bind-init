@@ -10,7 +10,7 @@ services:
     image: deanayalon/bind-init
     container_name: bind-initializer
     build: 
-      dockerfile: docker/dockerfile
+      dockerfile: docker/Dockerfile
       tags: [ghcr.io/deanayalon/bind-init]
       platforms:
         - linux/amd64
@@ -22,13 +22,13 @@ services:
     image: deanayalon/bind-init:${DEV_TAG:-dev}
     profiles: [dev]
     build: 
-      dockerfile: docker/dev/dockerfile.${DEV_TAG:-dev}
+      dockerfile: docker/dev/Dockerfile.${DEV_TAG:-dev}
     develop:
       watch:
         - path: main.py
           action: sync
           target: /app/main.py
-        - path: docker/dev/dockerfile.${DEV_TAG:-dev}
+        - path: docker/dev/Dockerfile.${DEV_TAG:-dev}
           action: rebuild
         - path: pyproject.toml
           action: rebuild
