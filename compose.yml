@@ -22,13 +22,16 @@ services:
     image: deanayalon/bind-init:${DEV_TAG:-dev}
     profiles: [dev]
     build: 
-      dockerfile: docker/dev/Dockerfile.${DEV_TAG:-dev}
+      dockerfile: docker/dev/${DEV_TAG:-dev}.Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64/v8
     develop:
       watch:
         - path: main.py
           action: sync
           target: /app/main.py
-        - path: docker/dev/Dockerfile.${DEV_TAG:-dev}
+        - path: docker/dev/${DEV_TAG:-dev}.Dockerfile
           action: rebuild
         - path: pyproject.toml
           action: rebuild

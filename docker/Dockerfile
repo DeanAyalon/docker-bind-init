@@ -6,8 +6,8 @@ RUN poetry install
 
 FROM python:3.12-slim-bookworm
 
-LABEL org.opencontainers.image.source https://github.com/deanayalon/docker-bind-init
-LABEL org.opencontainers.image.authors Dean Ayalon - dev@deanayalon.com
+LABEL org.opencontainers.image.source=https://github.com/deanayalon/docker-bind-init
+LABEL org.opencontainers.image.authors="Dean Ayalon - dev@deanayalon.com"
 
 WORKDIR /app
 ENV PATH="/app/.venv/bin:$PATH"
